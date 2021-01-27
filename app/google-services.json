@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "254391704041",
+    "project_id": "michatapp3",
+    "storage_bucket": "michatapp3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:254391704041:android:332691687468f5c38ed378",
+        "android_client_info": {
+          "package_name": "com.example.chatappprueba3"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "254391704041-pvnv0s9kk1e1odk0td58jg9ks01nm5hp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.chatappprueba3",
+            "certificate_hash": "b0b53e412dc8cda74b45308b233a4b7a47a6de71"
+          }
+        },
+        {
+          "client_id": "254391704041-2b5bn0f9cu4rfape5qnm8k3ebmbv5lf2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFEfsHE6ebEiY2a_NFnz76M2jvSJpzhaU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "254391704041-2b5bn0f9cu4rfape5qnm8k3ebmbv5lf2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

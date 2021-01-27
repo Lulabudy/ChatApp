@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingVertical="10dp"
+    android:paddingRight="15dp"
+    android:paddingLeft="60dp"
+    android:clipToPadding="false">
+
+    <ImageView
+        android:id="@+id/imageViewImage"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:background="@drawable/rectangle_green"
+        android:src="@drawable/test"
+        android:padding="10dp"
+        android:elevation="2dp"
+        android:textSize="18dp"
+        android:layout_alignParentRight="true"
+        ></ImageView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="right"
+        android:layout_below="@id/imageViewImage">
+
+
+        <TextView
+            android:text="fecha"
+            android:layout_gravity="center"
+            android:textSize="12sp"
+            android:id="@+id/textViewFecha"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"></TextView>
+
+        <ImageView
+            android:visibility="gone"
+            android:id="@+id/imageViewSendedMessage"
+            android:src="@drawable/ic_sended_message"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"></ImageView>
+
+        <ImageView
+            android:visibility="gone"
+            android:id="@+id/imageViewReadMessage"
+            android:src="@drawable/ic_message_read"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"></ImageView>
+
+    </LinearLayout>
+</RelativeLayout>

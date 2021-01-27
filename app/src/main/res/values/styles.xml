@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">#808782</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+    </style>
+
+    <style name="Button.Default" parent="ThemeOverlay.AppCompat">
+        <item name="colorPrimary">#D6D6D6</item>
+    </style>
+
+    <style name="Button.Pressed" parent="ThemeOverlay.AppCompat">
+        <item name="colorPrimary">#6E6E6E</item>
+    </style>
+
+    <style name="splash" parent="AppTheme">
+        <item name="android:windowBackground">@drawable/splash</item>
+    </style>
+
+    <style name="MenuStyle" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="colorControlNormal">@color/white</item>
+        <item name="titleTextColor">@color/black</item>
+    </style>
+</resources>

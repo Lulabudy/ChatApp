@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:theme="@style/MenuStyle">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:background="#151515">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appBarLayoutImageFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbarImageFragment"
+
+                android:theme="@style/MenuStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:shadowRadius="2"
+                        android:shadowDx="1"
+                        android:shadowDy="2"
+                        android:layout_marginLeft="10dp"
+                        android:textColor="@color/white"
+                        android:text="@string/user_name"
+                        android:id="@+id/textViewImageFragmentName"
+                        android:textSize="16dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"></TextView>
+
+                    <TextView
+                        android:id="@+id/textViewImageFragmentFecha"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="10dp"
+                        android:text="fecha"
+                        android:textColor="@color/white"
+                        android:layout_below="@id/textViewChatUserName"
+                        android:layout_marginLeft="9.74dp"
+                        ></TextView>
+                </LinearLayout>
+            </androidx.appcompat.widget.Toolbar>
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageViewImageSent"
+            android:layout_below="@id/appBarLayoutImageFragment"
+            android:layout_alignParentBottom="true"></ImageView>
+
+    </RelativeLayout>
+</FrameLayout>
