@@ -20,6 +20,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.transition.TransitionManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -351,13 +352,16 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void setMessageRead() {
+        Log.i("test", "entrando en setMessageRead");
         databaseReferenceChats.child(idChatGlobal).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()){
                     Chat chat = dataSnapshot.getValue(Chat.class);
+                    Log.i("test", "entrando en setMessageRead"+chat.getUserReceiveId());
 
                     if(chat.getUserReceiveId().equals(firebaseUser.getUid())){
+                        Log.i("test", "se cumple la condicion");
                         databaseReferenceChats.child(idChatGlobal).child(chat.getId()).child("messageRead").setValue(true);
                     }
                 }
@@ -406,6 +410,7 @@ public class ChatActivity extends AppCompatActivity {
                 String idUser = getIntent().getExtras().getString("IdUser");
                 Status userStatus = new Status(status, idUser);
                 databaseReferenceStatus.setValue(userStatus);
+
             }
 
             @Override
@@ -419,7 +424,9 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        Log.i("test", "entrando en OnResume de ChatActivity");
         setUserStatus("Conectado");
+        setMessageRead();
     }
 
     //Cuando el usuario cierra la aplicacion su estado pasa a desconectado y pongo su ultima conexion
@@ -453,6 +460,7 @@ public class ChatActivity extends AppCompatActivity {
                 databaseReferenceStatus.child("date").setValue(MyCalendar.getDate());
                 databaseReferenceStatus.child("time").setValue(MyCalendar.getTime());
                 databaseReferenceStatus.child("status").setValue("Desconectado");
+                databaseReferenceStatus.child("chat").setValue("");
             }
 
             @Override

@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,6 +61,7 @@ public class RegisterFragment extends Fragment {
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
     private ProgressBar progressBarTasks;
+    private LoadingDialog loadingDialog;
 
 
 
@@ -88,6 +90,7 @@ public class RegisterFragment extends Fragment {
             }
         });
 
+        loadingDialog = new LoadingDialog(getActivity());
         buttonRegistrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -100,7 +103,17 @@ public class RegisterFragment extends Fragment {
                         !userPassword.equals("") && !userConfirmPassword.equals("")){
 
                     if (userPassword.equals(userConfirmPassword)){
+
                         registerUser(userName, userSurname, userEmail, userPassword);
+                        loadingDialog.start();
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                loadingDialog.dismissDialog();
+                            }
+                        }, 5000);
+                        goToLogin(userEmail);
                     } else {
                         Toast.makeText(getActivity(), "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show();
                     }
@@ -123,32 +136,38 @@ public class RegisterFragment extends Fragment {
 
     private void registerUser(String userName, String userSurname, String userEmail, String userPassword) {
 
+        editor.putBoolean("vienesDeRegister", true);
+        boolean register = sharedPreferences.getBoolean("vienesDeRegister", false);
+        editor.commit();
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseAuth.createUserWithEmailAndPassword(userEmail, userPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                while (!task.isSuccessful());
+                while(!task.isSuccessful());
+                if(task.isSuccessful()){
+                    FirebaseUser firebaseUser= firebaseAuth.getCurrentUser();
+                    uploadPictureToFirebase(firebaseUser);
+                    User user = new User();
+                    String nombreCompleto = userName + " " + userSurname;
+                    //updateUserName(nombreCompleto);
+                    Log.i("test", sharedPreferences.getString("Url", "")+ "aaaaasda");
+                    String url = sharedPreferences.getString("Url", "");
+                    user.setId(firebaseUser.getUid());
+                    user.setName(nombreCompleto);
+                    user.setDate(MyCalendar.getCurrentDateTime());
+                    user.setEmail(firebaseUser.getEmail());
+                    user.setAvatar(url);
+                    Log.i("test", "yendo ainsertuser");
 
-                FirebaseUser firebaseUser= firebaseAuth.getCurrentUser();
-                uploadPictureToFirebase(firebaseUser);
-                User user = new User();
-                String nombreCompleto = userName + " " + userSurname;
-                //updateUserName(nombreCompleto);
-                Log.i("test", sharedPreferences.getString("Url", "")+ "aaaaasda");
-                String url = sharedPreferences.getString("Url", "");
-                user.setId(firebaseUser.getUid());
-                user.setName(nombreCompleto);
-                user.setDate(MyCalendar.getCurrentDateTime());
-                user.setEmail(firebaseUser.getEmail());
-                user.setAvatar(url);
-                Log.i("test", "yendo ainsertuser");
-                editor.putBoolean("vienesDeRegister", true);
-                boolean register = sharedPreferences.getBoolean("vienesDeRegister", false);
-                editor.commit();
-                Log.i("test", register? "true":"false");
-                insertUser(user);
+                    Log.i("test", register? "trueCREATEUSER":"falseCREATEUSER");
+                    insertUser(user);
+                } else {
+                    Toast.makeText(getActivity(), "Ocurrio un fallo inesperado", Toast.LENGTH_SHORT).show();
+                }
+
+
                 //updateUserAvatar(firebaseUser);
-                goToLogin(firebaseUser.getEmail());
+                //goToLogin(firebaseUser.getEmail());
             }
         })
                 .addOnFailureListener(new OnFailureListener() {
@@ -250,7 +269,7 @@ public class RegisterFragment extends Fragment {
                 editor.putString("Url", uriTask.getResult().toString());
                 editor.commit();
                 Log.i("test", sharedPreferences.getString("Url", ""));
-                Toast.makeText(getActivity(), "Imagen subida", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(), "Imagen subida", Toast.LENGTH_SHORT).show();
                 uploadUserProfile();
 
 
@@ -271,7 +290,7 @@ public class RegisterFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()){
-                            Toast.makeText(getActivity(), "Perfil actualizado", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getActivity(), "Perfil actualizado", Toast.LENGTH_SHORT).show();
                             updateUserAvatar(firebaseUser);
                         }
                     }

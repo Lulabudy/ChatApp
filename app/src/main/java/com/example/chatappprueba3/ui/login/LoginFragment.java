@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.example.chatappprueba3.MainActivity;
 import com.example.chatappprueba3.R;
+import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -37,6 +38,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.Executor;
 
 
@@ -54,8 +57,10 @@ public class LoginFragment extends Fragment {
     private GoogleSignInOptions gso;
     private GoogleSignInClient googleSignInClient;
     private FirebaseAuth firebaseAuth;
+    private FirebaseAuth.AuthStateListener authStateListener;
     public static final int RC_SIGN_IN = 1;
     private FirebaseAuth mAuth;
+    private List<AuthUI.IdpConfig> providers = Arrays.asList(new AuthUI.IdpConfig.GoogleBuilder().build());
 
 
     @Override
@@ -63,25 +68,40 @@ public class LoginFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
 
-        vienesDeRegister = false;
+
         editTextEmail = view.findViewById(R.id.editTextTextEmailAddress);
         editTextPassword = view.findViewById(R.id.editTextTextPassword);
         buttonLogin = view.findViewById(R.id.buttonLogin);
         textViewRegister = view.findViewById(R.id.textViewRegister);
         signInButton = view.findViewById(R.id.sign_in_button);
 
-        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        /*gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
-                .build();
+                .build();*/
 
-        mAuth = FirebaseAuth.getInstance();
+
+
         //sharedPreferences = getSharedPreferences("loginStatus", Context.MODE_PRIVATE);
 
         sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
-        googleSignInClient = GoogleSignIn.getClient(getActivity(), gso);
+        //googleSignInClient = GoogleSignIn.getClient(getActivity(), gso);
+        vienesDeRegister = sharedPreferences.getBoolean("vienesDeRegister", false);
 
+        mAuth = FirebaseAuth.getInstance();
+        authStateListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = mAuth.getCurrentUser();
+                Log.i("test", "entrando en onAuthStateChanged");
+                if (user != null && !vienesDeRegister){
+                    Log.i("test", "onAuthStateChanged dice que user no es null");
+                    openMainActivity();
+                }
+
+            }
+        };
         //loginStatus = sharedPreferences.getBoolean("loginStatusVar", loginStatus);
         /*if (loginStatus){
             Intent intent = new Intent(getActivity(), MainActivity.class);
@@ -94,7 +114,7 @@ public class LoginFragment extends Fragment {
                 String email = editTextEmail.getText().toString().trim();
                 String password = editTextPassword.getText().toString().trim();
 
-                firebaseAuth = FirebaseAuth.getInstance();
+                //firebaseAuth = FirebaseAuth.getInstance();
 
                 if (email.isEmpty()) {
                     editTextEmail.setError("Email is required");
@@ -114,7 +134,7 @@ public class LoginFragment extends Fragment {
                     return;
                 }
 
-                firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
@@ -155,9 +175,11 @@ public class LoginFragment extends Fragment {
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent signInIntent = googleSignInClient.getSignInIntent();
-                startActivityForResult(signInIntent, RC_SIGN_IN);
-
+                startActivityForResult(AuthUI.getInstance()
+                        .createSignInIntentBuilder()
+                        .setAvailableProviders(providers)
+                        .setIsSmartLockEnabled(false)
+                        .build(), RC_SIGN_IN);
             }
         });
 
@@ -186,14 +208,18 @@ public class LoginFragment extends Fragment {
             // Check if user is signed in (non-null) and update UI accordingly.
             //FirebaseUser currentUser = mAuth.getCurrentUser();
             //updateUI(currentUser);
-            GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getActivity());
+
+            /*GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getActivity());
             if (account != null) {
                 openMainActivity();
-            }
-
+                //Esto da error
+            }*/
+            mAuth.addAuthStateListener(authStateListener);
             FirebaseUser currentUser = mAuth.getCurrentUser();
+            //Este user deberia ser null
             if (currentUser != null) {
-                openMainActivity();
+                //openMainActivity();
+                Log.i("test", "firebase user no es null en login");
             }
         } else {
             editor.putBoolean("vienesDeRegister", false);
@@ -204,13 +230,22 @@ public class LoginFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        //mFirebaseAuth.addAuthStateListener(authStateListener);
-        //mFirebaseAuth.removeAuthStateListener(authStateListener);
+        mAuth.addAuthStateListener(authStateListener);
+        //
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAuth != null){
+            mAuth.removeAuthStateListener(authStateListener);
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        mAuth.removeAuthStateListener(authStateListener);
     }
 
     private void openMainActivity() {
@@ -231,7 +266,8 @@ public class LoginFragment extends Fragment {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 //Log.d(TAG, "firebaseAuthWithGoogle:" + account.getId());
-                firebaseAuthWithGoogle(account.getIdToken());
+                handleSignInResult(task);
+                //firebaseAuthWithGoogle(account.getIdToken());
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
                 //Log.w(TAG, "Google sign in failed", e);

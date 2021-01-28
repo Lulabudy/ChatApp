@@ -1,6 +1,8 @@
 package com.example.chatappprueba3;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuInflater;
@@ -50,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseDatabase database;
     private DatabaseReference userReference;
     private DatabaseReference statusReference;
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
 
 
     @Override
@@ -61,13 +65,15 @@ public class MainActivity extends AppCompatActivity {
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         database = FirebaseDatabase.getInstance();
-        if (user != null){
+        sharedPreferences = this.getPreferences(Context.MODE_PRIVATE);
+        editor = sharedPreferences.edit();
+        /*if (user != null){
             Log.i("user", "no es null");
         } else {
 
             Log.i("user", "es null");
             openLogin();
-        }
+        }*/
 
 
         userReference = database.getReference("Users").child(user.getUid());
@@ -199,6 +205,8 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch(item.getItemId()){
             case R.id.item_cerrar_sesion:
+                editor.putBoolean("vienesDeRegister", true);
+                editor.commit();
                 setUserStatus("Desconectado");
                 setUserStatusDateAndTime();
                 Toast.makeText(MainActivity.this, "Cerrando sesión...", Toast.LENGTH_LONG).show();
@@ -207,11 +215,13 @@ public class MainActivity extends AppCompatActivity {
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
-
-                                finish();
                                 openLogin();
+                                finish();
                             }
                         });
+                //Estos metodos aqui volvian a la aplicacion loca
+                //finish();
+                //openLogin();
                 break;
                 //TODO Case settings
         }
