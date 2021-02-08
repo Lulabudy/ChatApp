@@ -29,9 +29,11 @@
         android:label="@string/menu_my_requests"
         tools:layout="@layout/fragment_requests" />
 
-    <!--<fragment
-        android:id="@+id/nav_group_chats"
-        android:name="com.example.chatappprueba3.ui.chatgroups.ChatGroupFragment"
-        android:label="@string/menu_create_group"
-        tools:layout="@layout/fragment_chat_group" />-->
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.chatappprueba3.ui.settings.SettingsFragment"/>
+
+    <action android:id="@+id/open_settings_fragment"
+
+        app:destination="@id/settingsFragment"/>
 </navigation>

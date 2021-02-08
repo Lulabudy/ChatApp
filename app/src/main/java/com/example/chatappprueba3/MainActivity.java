@@ -36,6 +36,7 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.preference.PreferenceManager;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -54,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference statusReference;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
+    private SharedPreferences settingsPreferences;
+    private boolean showOnline;
 
 
     @Override
@@ -75,6 +78,10 @@ public class MainActivity extends AppCompatActivity {
             openLogin();
         }*/
 
+        //Preferencias
+        settingsPreferences= PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        showOnline = settingsPreferences.getBoolean("online", true);
+        Toast.makeText(getApplicationContext(), ""+showOnline, Toast.LENGTH_SHORT).show();
 
         userReference = database.getReference("Users").child(user.getUid());
         statusReference = database.getReference("Estado").child(user.getUid());
@@ -98,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setUserStatus(String status) {
+
         statusReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -110,6 +118,8 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+
     }
 
     //Cuando el usuario abre la aplicación su estado pasa a conectado
@@ -132,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
         final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
         final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
+
         statusReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -144,6 +155,8 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+
     }
 
     /**
@@ -171,7 +184,8 @@ public class MainActivity extends AppCompatActivity {
                             user.getDisplayName(),
                             user.getEmail(),
                             user.getPhotoUrl().toString(),
-                            getCurrentDateTime());
+                            getCurrentDateTime(),
+                            true);
                     /*User u = new User(
                             user.getUid(),
                             user.getDisplayName(),
@@ -209,6 +223,7 @@ public class MainActivity extends AppCompatActivity {
                 editor.commit();
                 setUserStatus("Desconectado");
                 setUserStatusDateAndTime();
+
                 Toast.makeText(MainActivity.this, "Cerrando sesión...", Toast.LENGTH_LONG).show();
                 AuthUI.getInstance()
                         .signOut(this)
@@ -223,7 +238,9 @@ public class MainActivity extends AppCompatActivity {
                 //finish();
                 //openLogin();
                 break;
-                //TODO Case settings
+            case R.id.action_settings:
+                Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.settingsFragment);
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -262,5 +279,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        setUserStatus("Desconectado");
     }
+
+
 }

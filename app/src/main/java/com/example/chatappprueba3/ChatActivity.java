@@ -4,12 +4,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -63,7 +65,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private CircleImageView circleImageViewAvatar;
     private TextView textViewUser, textViewUserOnline;
-    //private SharedPreferences sharedPreferences;
+    private SharedPreferences settingsPreferences;
     private Toolbar toolbar;
 
     private FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -98,20 +100,18 @@ public class ChatActivity extends AppCompatActivity {
     AdapterMessages adapterMessages;
     ArrayList<Chat> chatArrayList;
 
-    /*@Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        if (getFragmentManager().getBackStackEntryCount() == 0) {
-            this.finish();
-        } else {
-            getFragmentManager().popBackStack();
-        }
-    }*/
+    //Preferencias
+    private boolean showOnline;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+
+        //Preferencias
+        settingsPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        showOnline = settingsPreferences.getBoolean("online", true);
+
 
         //Firebase storage
         firebaseStorage = FirebaseStorage.getInstance();
@@ -129,11 +129,13 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-        //sharedPreferences = getApplicationContext().getSharedPreferences("UserSharedPreferences", MODE_PRIVATE);
         circleImageViewAvatar = findViewById(R.id.imageViewChatAvatar);
         textViewUser = findViewById(R.id.textViewChatUserName);
-        textViewUserOnline = findViewById(R.id.textViewUserOnline);
 
+        textViewUserOnline = findViewById(R.id.textViewUserOnline);
+        if(!showOnline){
+            textViewUserOnline.setVisibility(View.INVISIBLE);
+        }
         String userName = getIntent().getExtras().getString("Name");
         String name = userName.substring(0, userName.indexOf(" "));
         String avatar = getIntent().getExtras().getString("Avatar");
@@ -427,6 +429,7 @@ public class ChatActivity extends AppCompatActivity {
         Log.i("test", "entrando en OnResume de ChatActivity");
         setUserStatus("Conectado");
         setMessageRead();
+
     }
 
     //Cuando el usuario cierra la aplicacion su estado pasa a desconectado y pongo su ultima conexion
@@ -434,8 +437,7 @@ public class ChatActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         setUserStatusDateAndTime();
-        //Tenemos que coger el estado y poner su chat = ""
-        //setUserStatusChatEmpty();
+
     }
 
     private void setUserStatusChatEmpty() {

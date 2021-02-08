@@ -157,9 +157,7 @@ public class RegisterFragment extends Fragment {
                     user.setDate(MyCalendar.getCurrentDateTime());
                     user.setEmail(firebaseUser.getEmail());
                     user.setAvatar(url);
-                    Log.i("test", "yendo ainsertuser");
-
-                    Log.i("test", register? "trueCREATEUSER":"falseCREATEUSER");
+                    user.setShowOnlinePrivacy(true);
                     insertUser(user);
                 } else {
                     Toast.makeText(getActivity(), "Ocurrio un fallo inesperado", Toast.LENGTH_SHORT).show();

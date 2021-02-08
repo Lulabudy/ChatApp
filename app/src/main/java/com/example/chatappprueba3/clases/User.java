@@ -7,18 +7,19 @@ public class User {
     private String email;
     private String avatar;
     private String date;
+    private Boolean showOnlinePrivacy;
 
     public User(){
 
     }
 
-    public User(String id, String name, String email, String avatar, String date) {
+    public User(String id, String name, String email, String avatar, String date, Boolean showOnlinePrivacy) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.avatar = avatar;
         this.date = date;
-
+        this.showOnlinePrivacy = showOnlinePrivacy;
     }
 
     public String getId() {
@@ -59,5 +60,13 @@ public class User {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public Boolean isShowOnlinePrivacy() {
+        return showOnlinePrivacy;
+    }
+
+    public void setShowOnlinePrivacy(Boolean showOnlinePrivacy) {
+        this.showOnlinePrivacy = showOnlinePrivacy;
     }
 }
