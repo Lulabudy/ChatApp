@@ -103,6 +103,9 @@ public class ChatActivity extends AppCompatActivity {
     //Preferencias
     private boolean showOnline;
 
+    //Preferencias del otro usuario
+    private DatabaseReference referenceOtherPrivacy;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,7 +114,6 @@ public class ChatActivity extends AppCompatActivity {
         //Preferencias
         settingsPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         showOnline = settingsPreferences.getBoolean("online", true);
-
 
         //Firebase storage
         firebaseStorage = FirebaseStorage.getInstance();
@@ -141,6 +143,30 @@ public class ChatActivity extends AppCompatActivity {
         String avatar = getIntent().getExtras().getString("Avatar");
         String idUser = getIntent().getExtras().getString("IdUser");
         idChatGlobal = getIntent().getExtras().getString("IdChatUnico");
+
+        //Preferencias del otro usuario
+        //Si el otro usuario no se quiere mostrar online, oculto el textView
+        referenceOtherPrivacy = FirebaseDatabase.getInstance().getReference("Users").child(idUser).child("showOnlinePrivacy");
+        referenceOtherPrivacy.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()){
+                    Boolean showOnlinePrivacy = snapshot.getValue(Boolean.class);
+                    if(!showOnlinePrivacy){
+                        textViewUserOnline.setVisibility(View.INVISIBLE);
+                    }
+
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
 
         setMessageRead();
 

@@ -25,21 +25,25 @@ import static com.firebase.ui.auth.AuthUI.getApplicationContext;
 public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     public SwitchPreferenceCompat showOnlinePref;
-    private FirebaseUser firebaseAuth;
-    private FirebaseDatabase firebaseDatabase;
-    private DatabaseReference ref;
+    private FirebaseUser firebaseAuth = FirebaseAuth.getInstance().getCurrentUser();;
+    private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+    private DatabaseReference ref = firebaseDatabase.getReference("Users").child(firebaseAuth.getUid());;
+    private SharedPreferences sharedPreferences;
     //private SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
     //private SharedPreferences.Editor editor = preferences.edit();
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey);
+        //addPreferencesFromResource(R.xml.root_preferences);
         setHasOptionsMenu(true);
-
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         showOnlinePref = (SwitchPreferenceCompat) findPreference("online");
+        onSharedPreferenceChanged(sharedPreferences, "online");
+
         //showOnlinePref.setEnabled(true);
-        firebaseAuth = FirebaseAuth.getInstance().getCurrentUser();
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        ref = firebaseDatabase.getReference("Users").child(firebaseAuth.getUid());
+
+
+
     }
 
 
@@ -82,36 +86,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     public void onResume() {
         super.onResume();
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-
-        boolean showOnline = preferences.getBoolean("online", true);
-        //Do whatever you want here. This is an example.
-        if (showOnline) {
-            showOnlinePref.setSummary("Enabled");
-            ref.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    ref.child("showOnlinePrivacy").setValue(true);
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
-        } else {
-            showOnlinePref.setSummary("Disabled");
-            ref.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    ref.child("showOnlinePrivacy").setValue(false);
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
-        }
+        getPreferenceScreen().getSharedPreferences()
+                .registerOnSharedPreferenceChangeListener(this);
     }
 }

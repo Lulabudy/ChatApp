@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -38,7 +39,8 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.viewHolderAd
     private FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
 
-    //private SharedPreferences sharedPreferences;
+    private SharedPreferences settingsPreferences;
+    private boolean showOnline;
 
     public ChatsAdapter(List<User> users, Context context){
         this.users = users;
@@ -55,6 +57,10 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.viewHolderAd
     @Override
     public void onBindViewHolder(@NonNull viewHolderAdapterChatList holder, int position) {
         User user = users.get(position);
+
+        //PReferencias
+        settingsPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        showOnline = settingsPreferences.getBoolean("online", true);
 
         //Con esto podemos hacer vibrar el movil para las notificaciones
         final Vibrator vibrator = (Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE);
@@ -101,8 +107,11 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.viewHolderAd
                 String fecha = snapshot.child("date").getValue(String.class);
                 String hora = snapshot.child("time").getValue(String.class);
                 if (snapshot.exists()){
+                    //Tomo la referencia del otro usuario
 
-                    if(status.equals("Conectado")){
+
+                    if(status.equals("Conectado" )){
+
                         holder.textViewConnected.setVisibility(View.VISIBLE);
                         holder.imageViewConnected.setVisibility(View.VISIBLE);
                         holder.textViewDisconnected.setVisibility(View.GONE);
@@ -118,6 +127,33 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.viewHolderAd
                         } else {
                             holder.textViewDisconnected.setText("Ult. vez "+fecha+" a las "+hora);
                         }
+                    }
+
+                    DatabaseReference refOther = firebaseDatabase.getReference("Users").child(user.getId()).child("showOnlinePrivacy");
+                    refOther.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if(snapshot.exists()){
+                                Boolean showOnlinePrivacy = snapshot.getValue(Boolean.class);
+                                if(!showOnlinePrivacy){
+                                    holder.textViewConnected.setVisibility(View.GONE);
+                                    holder.imageViewConnected.setVisibility(View.GONE);
+                                    holder.textViewDisconnected.setVisibility(View.GONE);
+                                    holder.imageViewDisconnected.setVisibility(View.GONE);
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                    if(!showOnline){
+                        holder.textViewConnected.setVisibility(View.GONE);
+                        holder.imageViewConnected.setVisibility(View.GONE);
+                        holder.textViewDisconnected.setVisibility(View.GONE);
+                        holder.imageViewDisconnected.setVisibility(View.GONE);
                     }
                 }
             }

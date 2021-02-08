@@ -81,7 +81,6 @@ public class MainActivity extends AppCompatActivity {
         //Preferencias
         settingsPreferences= PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         showOnline = settingsPreferences.getBoolean("online", true);
-        Toast.makeText(getApplicationContext(), ""+showOnline, Toast.LENGTH_SHORT).show();
 
         userReference = database.getReference("Users").child(user.getUid());
         statusReference = database.getReference("Estado").child(user.getUid());
