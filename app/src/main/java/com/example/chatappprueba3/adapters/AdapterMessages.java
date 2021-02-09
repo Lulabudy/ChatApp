@@ -6,6 +6,7 @@ import android.app.DownloadManager;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -26,6 +28,7 @@ import com.example.chatappprueba3.clases.User;
 import com.example.chatappprueba3.enums.MessageType;
 import com.example.chatappprueba3.ui.chats.ChatImageFragment;
 import com.example.chatappprueba3.utils.Encrypter;
+import com.example.chatappprueba3.utils.MyCalendar;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -62,6 +65,9 @@ public class AdapterMessages extends RecyclerView.Adapter<AdapterMessages.viewHo
     private FirebaseUser firebaseUser;
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
 
+    private SharedPreferences settingsPreferences ;
+    private boolean readMessages;
+
     public AdapterMessages(List<Chat> chatList, Context context){
         this.chatList = chatList;
         this.context = context;
@@ -94,9 +100,6 @@ public class AdapterMessages extends RecyclerView.Adapter<AdapterMessages.viewHo
 
         Chat chat = chatList.get(position);
 
-        final Calendar c = Calendar.getInstance();
-        final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        final SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("hh:mm");
         //Desencripto el mensaje
         //Texto
         if (chat.getMessageType().equals(MessageType.MESSAGE_TEXT)){
@@ -109,7 +112,6 @@ public class AdapterMessages extends RecyclerView.Adapter<AdapterMessages.viewHo
             Glide.with(getApplicationContext()).load(chat.getMessage()).into(holder.imageViewImage);
 
             //TODO revisa esto
-            //OnclickListener Image
             holder.imageViewImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -123,7 +125,7 @@ public class AdapterMessages extends RecyclerView.Adapter<AdapterMessages.viewHo
                         bundle.putString("Name", "Tú");
                     }
 
-                    if (chat.getDate().equals(simpleDateFormat.format(c.getTime()))){
+                    if (chat.getDate().equals(MyCalendar.getDate())){
                         bundle.putString("Date", "Hoy " + chat.getTime());
                     } else {
                         bundle.putString("Date", chat.getDate()+" "+chat.getTime());
@@ -157,7 +159,18 @@ public class AdapterMessages extends RecyclerView.Adapter<AdapterMessages.viewHo
 
         if(isMyMessage){
 
-            if(chat.getMessageRead()){
+            /**
+             * Segun las preferencias, oculto que el mensaje ha sido leido o no
+             */
+            settingsPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+            readMessages = settingsPreferences.getBoolean("read", true);
+            /*if(!readMessages){
+                holder.imageViewReadMessage.setVisibility(View.INVISIBLE);
+            } else if(readMessages){
+                holder.imageViewReadMessage.setVisibility(View.VISIBLE);
+            }*/
+
+            if(readMessages && chat.getMessageRead()){
                 holder.imageViewSendedMessage.setVisibility(View.GONE);
                 holder.imageViewReadMessage.setVisibility(View.VISIBLE);
             } else {
@@ -167,7 +180,7 @@ public class AdapterMessages extends RecyclerView.Adapter<AdapterMessages.viewHo
 
 
 
-            if (chat.getDate().equals(simpleDateFormat.format(c.getTime()))){
+            if (chat.getDate().equals(MyCalendar.getDate())){
                 holder.textViewDate.setText("Hoy "+chat.getTime());
             } else {
                 holder.textViewDate.setText(chat.getDate()+" "+chat.getTime());
@@ -184,7 +197,7 @@ public class AdapterMessages extends RecyclerView.Adapter<AdapterMessages.viewHo
                         User u = snapshot.getValue(User.class);
                         String nombre = u.getName().substring(0, u.getName().indexOf(" "));
                         holder.textViewName.setText(nombre);
-                        if (chat.getDate().equals(simpleDateFormat.format(c.getTime()))){
+                        if (chat.getDate().equals(MyCalendar.getDate())){
                             holder.textViewDate.setText("Hoy "+chat.getTime());
                         } else {
                             holder.textViewDate.setText(chat.getDate()+" "+chat.getTime());
@@ -245,7 +258,6 @@ public class AdapterMessages extends RecyclerView.Adapter<AdapterMessages.viewHo
             chatImageFragment.setArguments(bundle);
             FragmentManager fragmentManager = ((Activity) context).getFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            //fragmentTransaction.setCustomAnimations(R.anim.fragment_open_enter, R.anim.fragment_close_exit);
             fragmentTransaction.replace(R.id.chatActivity, chatImageFragment).addToBackStack(null);
             fragmentTransaction.commit();
         }

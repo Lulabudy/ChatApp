@@ -2,8 +2,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-
-
     <PreferenceCategory app:title="Privacidad">
 
         <SwitchPreferenceCompat
@@ -15,9 +13,10 @@
 
         <SwitchPreferenceCompat
             app:key="read"
+            app:defaultValue="true"
             app:summaryOff="Si lo desactivas no podrás ver quién lee tus mensajes"
             app:summaryOn="Si lo desactivas no podrás ver quién lee tus mensajes"
-            app:title="Ocultar mensajes leídos" />
+            app:title="Mostrar mensajes leídos" />
 
     </PreferenceCategory>
 

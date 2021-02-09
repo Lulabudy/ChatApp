@@ -25,6 +25,7 @@ import static com.firebase.ui.auth.AuthUI.getApplicationContext;
 public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     public SwitchPreferenceCompat showOnlinePref;
+    public SwitchPreferenceCompat showReadMessage;
     private FirebaseUser firebaseAuth = FirebaseAuth.getInstance().getCurrentUser();;
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference ref = firebaseDatabase.getReference("Users").child(firebaseAuth.getUid());;
@@ -38,8 +39,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         setHasOptionsMenu(true);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         showOnlinePref = (SwitchPreferenceCompat) findPreference("online");
+        showReadMessage = (SwitchPreferenceCompat) findPreference("read");
         onSharedPreferenceChanged(sharedPreferences, "online");
-
+        onSharedPreferenceChanged(sharedPreferences, "read");
         //showOnlinePref.setEnabled(true);
 
 
@@ -71,6 +73,40 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         ref.child("showOnlinePrivacy").setValue(false);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+        }
+
+        if(key.equals("read")){
+            boolean showRead = sharedPreferences.getBoolean("read", true);
+
+            if (showRead){
+                showReadMessage.setSummary("Enabled");
+
+                ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        ref.child("showReadMessage").setValue(true);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            } else {
+                showReadMessage.setSummary("Disabled");
+
+                ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        ref.child("showReadMessage").setValue(false);
                     }
 
                     @Override

@@ -19,6 +19,7 @@ import com.bumptech.glide.Glide;
 import com.example.chatappprueba3.ChatActivity;
 import com.example.chatappprueba3.R;
 import com.example.chatappprueba3.clases.User;
+import com.example.chatappprueba3.utils.MyCalendar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -95,9 +96,10 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.viewHolderAd
             }
         });
 
-        Calendar c = Calendar.getInstance();
-        final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
+        /***
+         * TODO ESTO SE PUEDE MEJORAR
+         */
         DatabaseReference referenceStatus = firebaseDatabase.getReference("Estado").child(user.getId());
         referenceStatus.addValueEventListener(new ValueEventListener() {
             @Override
@@ -107,8 +109,6 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.viewHolderAd
                 String fecha = snapshot.child("date").getValue(String.class);
                 String hora = snapshot.child("time").getValue(String.class);
                 if (snapshot.exists()){
-                    //Tomo la referencia del otro usuario
-
 
                     if(status.equals("Conectado" )){
 
@@ -122,13 +122,16 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.viewHolderAd
                         holder.textViewDisconnected.setVisibility(View.VISIBLE);
                         holder.imageViewDisconnected.setVisibility(View.VISIBLE);
 
-                        if (fecha.equals(dateFormat.format(c.getTime()))){
+                        if (fecha.equals(MyCalendar.getTime())){
                             holder.textViewDisconnected.setText("Ult. vez hoy a las "+hora);
                         } else {
                             holder.textViewDisconnected.setText("Ult. vez "+fecha+" a las "+hora);
                         }
                     }
 
+                    /***
+                     * Si el otro usuario no quiere mostrar su estado oculto el texto.
+                     */
                     DatabaseReference refOther = firebaseDatabase.getReference("Users").child(user.getId()).child("showOnlinePrivacy");
                     refOther.addValueEventListener(new ValueEventListener() {
                         @Override
@@ -200,8 +203,6 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.viewHolderAd
         });
     }
 
-
-
     @Override
     public int getItemCount() {
         return users.size();
@@ -226,7 +227,6 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.viewHolderAd
             textViewDisconnected = itemView.findViewById(R.id.textViewDisconnected);
             imageViewConnected = itemView.findViewById(R.id.imageViewConnected);
             imageViewDisconnected = itemView.findViewById(R.id.imageViewDisconnected);
-
         }
     }
 }

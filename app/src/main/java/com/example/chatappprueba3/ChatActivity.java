@@ -65,7 +65,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private CircleImageView circleImageViewAvatar;
     private TextView textViewUser, textViewUserOnline;
-    private SharedPreferences settingsPreferences;
+
     private Toolbar toolbar;
 
     private FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -101,10 +101,13 @@ public class ChatActivity extends AppCompatActivity {
     ArrayList<Chat> chatArrayList;
 
     //Preferencias
+    private SharedPreferences settingsPreferences;
     private boolean showOnline;
+    private boolean readMessages;
 
     //Preferencias del otro usuario
     private DatabaseReference referenceOtherPrivacy;
+    private DatabaseReference refOther;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,6 +117,7 @@ public class ChatActivity extends AppCompatActivity {
         //Preferencias
         settingsPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         showOnline = settingsPreferences.getBoolean("online", true);
+        readMessages = settingsPreferences.getBoolean("read", true);
 
         //Firebase storage
         firebaseStorage = FirebaseStorage.getInstance();
@@ -141,11 +145,13 @@ public class ChatActivity extends AppCompatActivity {
         String userName = getIntent().getExtras().getString("Name");
         String name = userName.substring(0, userName.indexOf(" "));
         String avatar = getIntent().getExtras().getString("Avatar");
-        String idUser = getIntent().getExtras().getString("IdUser");
+        final String idUser = getIntent().getExtras().getString("IdUser");
         idChatGlobal = getIntent().getExtras().getString("IdChatUnico");
 
         //Preferencias del otro usuario
-        //Si el otro usuario no se quiere mostrar online, oculto el textView
+        /***
+         * Si el usuario no quiere mostrar su estado, oculto el textView
+         */
         referenceOtherPrivacy = FirebaseDatabase.getInstance().getReference("Users").child(idUser).child("showOnlinePrivacy");
         referenceOtherPrivacy.addValueEventListener(new ValueEventListener() {
             @Override
@@ -155,10 +161,7 @@ public class ChatActivity extends AppCompatActivity {
                     if(!showOnlinePrivacy){
                         textViewUserOnline.setVisibility(View.INVISIBLE);
                     }
-
-
                 }
-
             }
 
             @Override
@@ -167,8 +170,6 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-
-        setMessageRead();
 
         editTextWriteMessage = findViewById(R.id.editTextEscribeMensaje);
         imageButtonSendMessage = findViewById(R.id.imageButtonEnviarMensaje);
@@ -196,7 +197,7 @@ public class ChatActivity extends AppCompatActivity {
 
                     String idPush = databaseReferenceChats.push().getKey();
                     Chat chat;
-                    if(friendOnline){
+                    if(readMessages && friendOnline){
                         chat = new Chat(idPush, firebaseUser.getUid(), idUser, message, true, dateFormat.format(c.getTime()), timeFormat.format(c.getTime()), MessageType.MESSAGE_TEXT);
                     } else {
                         chat = new Chat(idPush, firebaseUser.getUid(), idUser, message, false, dateFormat.format(c.getTime()), timeFormat.format(c.getTime()), MessageType.MESSAGE_TEXT);
@@ -252,8 +253,6 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-        //final String idUserSharedPreferences = sharedPreferences.getString("userSharedPreferences", "");
-
         textViewUser.setText(name);
         Glide.with(this).load(avatar).into(circleImageViewAvatar);
 
@@ -271,7 +270,34 @@ public class ChatActivity extends AppCompatActivity {
                 final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
                 if(snapshot.exists()){
                     if(chatWith.equals(firebaseUser.getUid())){
-                        friendOnline = true;
+                        /***
+                         * Si el usuario no quiere mostrar su estado, oculto el textView
+                         */
+                        referenceOtherPrivacy = FirebaseDatabase.getInstance().getReference("Users").child(idUser).child("showReadMessage");
+                        referenceOtherPrivacy.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                if (snapshot.exists()){
+                                    Boolean showOnlinePrivacy = snapshot.getValue(Boolean.class);
+                                    if(!showOnlinePrivacy){
+                                        friendOnline = false;
+                                    } else {
+                                        friendOnline = true;
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                        if(readMessages){
+
+                        } else {
+
+                        }
+
                         //TODO creo que puedo hacerlo con enumeraciones
                         if (status.equals("Conectado")){
                             textViewUserOnline.setText("En línea");
@@ -380,7 +406,52 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void setMessageRead() {
-        Log.i("test", "entrando en setMessageRead");
+        databaseReferenceChats.child(idChatGlobal).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()){
+                    final Chat chat = dataSnapshot.getValue(Chat.class);
+                    Log.i("test", "entrando en setMessageRead"+chat.getUserReceiveId());
+
+                    /***
+                     * Si el otro usuario no quiere mostrar su estado oculto el texto.
+                     * */
+                    refOther = firebaseDatabase.getReference("Users").child(firebaseUser.getUid()).child("showReadMessage");
+                    refOther.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if(snapshot.exists()){
+                                Boolean showReadMessage = snapshot.getValue(Boolean.class);
+                                //Toast.makeText(getApplicationContext(), "showMessage: "+showReadMessage, Toast.LENGTH_SHORT).show();
+                                if(showReadMessage){
+                                    if(chat.getUserReceiveId().equals(firebaseUser.getUid())){
+                                        Log.i("test", "se cumple la condicion");
+                                        databaseReferenceChats.child(idChatGlobal).child(chat.getId()).child("messageRead").setValue(true);
+                                    }
+                                } else {
+                                    setMessageUnread();
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void setMessageUnread() {
         databaseReferenceChats.child(idChatGlobal).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -390,7 +461,7 @@ public class ChatActivity extends AppCompatActivity {
 
                     if(chat.getUserReceiveId().equals(firebaseUser.getUid())){
                         Log.i("test", "se cumple la condicion");
-                        databaseReferenceChats.child(idChatGlobal).child(chat.getId()).child("messageRead").setValue(true);
+                        databaseReferenceChats.child(idChatGlobal).child(chat.getId()).child("messageRead").setValue(false);
                     }
                 }
             }
@@ -525,7 +596,6 @@ public class ChatActivity extends AppCompatActivity {
         String fileName = getFileName(uri);
         String filePath= "files/" +firebaseUser.getUid()+"/"+firebaseUser.getUid()+timeStamp+"-"+fileName;
 
-
         //Limite de 15 Megas
         if (getFileSize(uri) < 15000000){
             StorageReference storageReference = FirebaseStorage.getInstance().getReference();
@@ -547,7 +617,7 @@ public class ChatActivity extends AppCompatActivity {
                                 String idPush = databaseReferenceChats.push().getKey();
                                 String idUser = getIntent().getExtras().getString("IdUser");
                                 Chat chat;
-                                if (friendOnline){
+                                if (readMessages && friendOnline){
                                     chat = new Chat(idPush, firebaseUser.getUid(), idUser, filePath, true, MyCalendar.getDate(), MyCalendar.getTime(), MessageType.MESSAGE_FILE);
                                 } else {
                                     chat = new Chat(idPush, firebaseUser.getUid(), idUser, filePath, false, MyCalendar.getDate(), MyCalendar.getTime(), MessageType.MESSAGE_FILE);

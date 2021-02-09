@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.chatappprueba3.clases.Status;
 import com.example.chatappprueba3.clases.User;
+import com.example.chatappprueba3.utils.MyCalendar;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -58,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences settingsPreferences;
     private boolean showOnline;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,27 +68,17 @@ public class MainActivity extends AppCompatActivity {
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         database = FirebaseDatabase.getInstance();
-        sharedPreferences = this.getPreferences(Context.MODE_PRIVATE);
-        editor = sharedPreferences.edit();
-        /*if (user != null){
-            Log.i("user", "no es null");
-        } else {
-
-            Log.i("user", "es null");
-            openLogin();
-        }*/
-
-        //Preferencias
-        settingsPreferences= PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        showOnline = settingsPreferences.getBoolean("online", true);
-
         userReference = database.getReference("Users").child(user.getUid());
         statusReference = database.getReference("Estado").child(user.getUid());
 
+        //Preferencias
+        sharedPreferences = this.getPreferences(Context.MODE_PRIVATE);
+        editor = sharedPreferences.edit();
+        settingsPreferences= PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        showOnline = settingsPreferences.getBoolean("online", true);
+
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_users, R.id.nav_chats, R.id.nav_requests, R.id.nav_my_requests)
                 .setDrawerLayout(drawer)
@@ -96,15 +86,15 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
-
         getUserData(navigationView);
-
         addUserToDatabase();
-
     }
 
+    /***
+     * Metodo que cambia el estado del usuario.
+     * @param status estado que va a insertarse.
+     */
     private void setUserStatus(String status) {
-
         statusReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -121,32 +111,15 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    //Cuando el usuario abre la aplicación su estado pasa a conectado
-    @Override
-    protected void onResume() {
-        super.onResume();
-        setUserStatus("Conectado");
-    }
-
-    //Cuando el usuario cierra la aplicacion su estado pasa a desconectado y pongo su ultima conexion
-    @Override
-    protected void onPause() {
-        super.onPause();
-        setUserStatus("Desconectado");
-        setUserStatusDateAndTime();
-    }
-
+    /***
+     * Metodo que inserta en el estado la fecha y la hora.
+     */
     private void setUserStatusDateAndTime() {
-        final Calendar c = Calendar.getInstance();
-        final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
-        final SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-
-
         statusReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                statusReference.child("date").setValue(dateFormat.format(c.getTime()));
-                statusReference.child("time").setValue(timeFormat.format(c.getTime()));
+                statusReference.child("date").setValue(MyCalendar.getDate());
+                statusReference.child("time").setValue(MyCalendar.getTime());
             }
 
             @Override
@@ -154,8 +127,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
-
     }
 
     /**
@@ -184,13 +155,8 @@ public class MainActivity extends AppCompatActivity {
                             user.getEmail(),
                             user.getPhotoUrl().toString(),
                             getCurrentDateTime(),
+                            true,
                             true);
-                    /*User u = new User(
-                            user.getUid(),
-                            user.getDisplayName(),
-                            user.getEmail(),
-                            "aaaaaa",
-                            getCurrentDateTime());*/
 
                     userReference.setValue(u);
                 }
@@ -207,13 +173,16 @@ public class MainActivity extends AppCompatActivity {
     //Añadimos las opciones de settings y cerrar sesion
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main, menu);
         return true;
     }
 
-    //Programamos el cierre de sesion
+    /***
+     * Botom de opciones del menú.
+     * @param item Item seleccionado del menú.
+     * @return Falso, para permitir el procesamiento normal del menú, Verdadero para terminar.
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch(item.getItemId()){
@@ -275,11 +244,34 @@ public class MainActivity extends AppCompatActivity {
         textViewEmail.setText(user.getEmail());
     }
 
+    //Ciclos de vida del activity
+
+    /**
+     * Cuando el usuario vuelve al activity su estado pasa a conectado
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setUserStatus("Conectado");
+    }
+
+    /**
+     * Cuando el usuario cierra la aplicacion su estado pasa a desconectado y pongo su ultima conexion
+     */
+    @Override
+    protected void onPause() {
+        super.onPause();
+        setUserStatus("Desconectado");
+        setUserStatusDateAndTime();
+    }
+
+    /***
+     * Si este activity muere el estado del usuario pasa a desconectado
+     */
     @Override
     protected void onDestroy() {
         super.onDestroy();
         setUserStatus("Desconectado");
     }
-
 
 }

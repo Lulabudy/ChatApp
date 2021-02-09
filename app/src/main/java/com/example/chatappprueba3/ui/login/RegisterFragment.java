@@ -149,8 +149,6 @@ public class RegisterFragment extends Fragment {
                     uploadPictureToFirebase(firebaseUser);
                     User user = new User();
                     String nombreCompleto = userName + " " + userSurname;
-                    //updateUserName(nombreCompleto);
-                    Log.i("test", sharedPreferences.getString("Url", "")+ "aaaaasda");
                     String url = sharedPreferences.getString("Url", "");
                     user.setId(firebaseUser.getUid());
                     user.setName(nombreCompleto);
@@ -158,14 +156,12 @@ public class RegisterFragment extends Fragment {
                     user.setEmail(firebaseUser.getEmail());
                     user.setAvatar(url);
                     user.setShowOnlinePrivacy(true);
+                    user.setShowReadMessage(true);
                     insertUser(user);
                 } else {
                     Toast.makeText(getActivity(), "Ocurrio un fallo inesperado", Toast.LENGTH_SHORT).show();
                 }
 
-
-                //updateUserAvatar(firebaseUser);
-                //goToLogin(firebaseUser.getEmail());
             }
         })
                 .addOnFailureListener(new OnFailureListener() {
@@ -221,9 +217,6 @@ public class RegisterFragment extends Fragment {
         });
     }
 
-
-
-
     private void goToLogin(String userEmail) {
         LoginFragment loginFragment = new LoginFragment();
         Bundle bundle = new Bundle();
@@ -244,8 +237,6 @@ public class RegisterFragment extends Fragment {
         if (requestCode == GALLERY_REQUEST && resultCode == RESULT_OK && data != null){
             Uri imageUri = data.getData();
             circleImageViewAvatar.setImageURI(imageUri);
-            //uploadPictureToFirebase(imageUri);
-
         }
     }
 
@@ -267,9 +258,7 @@ public class RegisterFragment extends Fragment {
                 editor.putString("Url", uriTask.getResult().toString());
                 editor.commit();
                 Log.i("test", sharedPreferences.getString("Url", ""));
-                //Toast.makeText(getActivity(), "Imagen subida", Toast.LENGTH_SHORT).show();
                 uploadUserProfile();
-
 
             }
         });
@@ -288,7 +277,6 @@ public class RegisterFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()){
-                            //Toast.makeText(getActivity(), "Perfil actualizado", Toast.LENGTH_SHORT).show();
                             updateUserAvatar(firebaseUser);
                         }
                     }
