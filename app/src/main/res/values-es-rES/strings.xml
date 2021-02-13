@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ChatAppPrueba3</string>
+    <string name="action_settings">Opciones</string>
+    <string name="sign_in_loading_dialog">Creando usuario...</string>
+    <string name="menu_users">Usuarios</string>
+    <string name="menu_chats">Chats</string>
+    <string name="menu_requests">Peticiones</string>
+    <string name="menu_my_requests">Mis peticiones</string>
+    <string name="menu_create_group">Crear grupo</string>
+    <string name="prompt_email">Correo</string>
+    <string name="prompt_password">Contraseña</string>
+    <string name="action_sign_in">Inicia sesión o regístrate</string>
+    <string name="action_sign_in_short">Inicia sesión</string>
+    <string name="welcome">Bienvenido !</string>
+    <string name="invalid_username">Nombre de usuario no válido</string>
+    <string name="invalid_password">La contraseña debe tener mas de 5 caracteres</string>
+    <string name="login_failed">El login falló</string>
+    <string name="user_name">Nombre de usuario</string>
+    <string name="users_add_user">Agregar</string>
+    <string name="users_sended_request">Solicitud enviada</string>
+    <string name="users_accept_request">Aceptar solicitud</string>
+    <string name="users_friends">Amigos</string>
+    <string name="chats_connected">En línea</string>
+    <string name="chats_write_a_message">Escribe un mensaje...</string>
+    <string name="chats_choose_alert_dialog">Enviar fotos</string>
+    <string name="chats_alert_dialog_cancel">Cancelar</string>
+    <string name="chats_upload_file_too_long">El límite de tamaño de los archivos adjuntos es de 15MB. Seleccione otro archivo y vuelta a intentarlo.</string>
+    <string name="chats_downloading_file">Descargando archivo...</string>
+    <string name="my_requests_no_request">Aun no has enviado ninguna solicitud</string>
+    <string name="requests_no_request">Aun no has recibido ninguna solicitud</string>
+    <string name="messages_header">Mensajes</string>
+</resources>
