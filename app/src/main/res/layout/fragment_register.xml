@@ -37,7 +37,7 @@
             android:layout_gravity="center"
             android:layout_marginHorizontal="30dp"
             android:layout_marginTop="5dp"
-            android:text="Selecciona una foto (te recomendamos que utilices una de tamaño pequeño donde se vea tu cara: "></TextView>
+            android:text="@string/register_select_photo"></TextView>
 
         <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/circleImageViewRegisterAvatar"
@@ -54,7 +54,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="30dp"
-            android:text="Name: "></TextView>
+            android:text="@string/register_name"></TextView>
 
         <EditText
             android:id="@+id/editTextTextName"
@@ -68,7 +68,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="30dp"
-            android:text="Surname: "></TextView>
+            android:text="@string/register_surname"></TextView>
 
         <EditText
             android:id="@+id/editTextTextSurname"
@@ -83,7 +83,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="30dp"
             android:layout_marginTop="5dp"
-            android:text="Email: "></TextView>
+            android:text="@string/register_email"></TextView>
 
         <EditText
             android:id="@+id/editTextTextEmailAddress"
@@ -97,7 +97,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="30dp"
-            android:text="Password: "></TextView>
+            android:text="@string/register_password"></TextView>
 
         <EditText
             android:id="@+id/editTextTextPassword"
@@ -111,7 +111,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="30dp"
-            android:text="Confirm Password: "></TextView>
+            android:text="@string/register_confirm_password"></TextView>
 
         <EditText
             android:id="@+id/editTextTextConfirmPassword"
@@ -128,7 +128,7 @@
             android:layout_gravity="center"
             android:layout_marginHorizontal="30dp"
             android:layout_marginBottom="30dp"
-            android:text="Registro"></Button>
+            android:text="@string/register_register"></Button>
 
     </LinearLayout>
 

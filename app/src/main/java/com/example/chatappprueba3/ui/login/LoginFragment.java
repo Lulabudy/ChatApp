@@ -75,18 +75,8 @@ public class LoginFragment extends Fragment {
         textViewRegister = view.findViewById(R.id.textViewRegister);
         signInButton = view.findViewById(R.id.sign_in_button);
 
-        /*gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();*/
-
-
-
-        //sharedPreferences = getSharedPreferences("loginStatus", Context.MODE_PRIVATE);
-
         sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
-        //googleSignInClient = GoogleSignIn.getClient(getActivity(), gso);
         vienesDeRegister = sharedPreferences.getBoolean("vienesDeRegister", false);
 
         mAuth = FirebaseAuth.getInstance();
@@ -102,11 +92,6 @@ public class LoginFragment extends Fragment {
 
             }
         };
-        //loginStatus = sharedPreferences.getBoolean("loginStatusVar", loginStatus);
-        /*if (loginStatus){
-            Intent intent = new Intent(getActivity(), MainActivity.class);
-            startActivity(intent);
-        }*/
 
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,22 +99,20 @@ public class LoginFragment extends Fragment {
                 String email = editTextEmail.getText().toString().trim();
                 String password = editTextPassword.getText().toString().trim();
 
-                //firebaseAuth = FirebaseAuth.getInstance();
-
                 if (email.isEmpty()) {
-                    editTextEmail.setError("Email is required");
+                    editTextEmail.setError(getActivity().getApplicationContext().getResources().getString(R.string.login_empty_email));
                     editTextEmail.requestFocus();
                     return;
                 }
 
                 if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                    editTextEmail.setError("Please enter a valid email");
+                    editTextEmail.setError(getActivity().getApplicationContext().getResources().getString(R.string.login_validate_email));
                     editTextEmail.requestFocus();
                     return;
                 }
 
                 if (password.isEmpty()) {
-                    editTextPassword.setError("Password is required");
+                    editTextPassword.setError(getActivity().getApplicationContext().getResources().getString(R.string.login_pass_required));
                     editTextPassword.requestFocus();
                     return;
                 }
@@ -140,7 +123,7 @@ public class LoginFragment extends Fragment {
                         if (task.isSuccessful()) {
                             openMainActivity();
                         } else {
-                            Toast.makeText(getActivity(), "Failed to login! Please check your credentials", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), getActivity().getApplicationContext().getResources().getString(R.string.login_failed_credentials), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -152,12 +135,7 @@ public class LoginFragment extends Fragment {
         textViewRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*if (!editTextEmail.getText().toString().equals("") && !editTextPassword.getText().toString().equals("")){
-                    editor.putString("email", editTextEmail.getText().toString());
-                    editor.putString("password", editTextPassword.getText().toString());
-                    editor.commit();
-                    Toast.makeText(LoginActivity.this, "Registrado con éxito", Toast.LENGTH_SHORT).show();
-                }*/
+
                 RegisterFragment registerFragment = new RegisterFragment();
 
                 if (registerFragment != null) {
@@ -166,9 +144,6 @@ public class LoginFragment extends Fragment {
                             .addToBackStack(null)
                             .commit();
                 }
-
-
-                //Toast.makeText(getActivity(), "Esto cargara el fragment de registro en un futuro", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -189,7 +164,7 @@ public class LoginFragment extends Fragment {
             String userEmail = bundle.getString("Email", "");
             if (userEmail != null) {
                 editTextEmail.setText(userEmail);
-                Toast.makeText(getActivity(), "Usuario registrado con exito", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(), "Usuario registrado con exito", Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -205,15 +180,7 @@ public class LoginFragment extends Fragment {
         vienesDeRegister = sharedPreferences.getBoolean("vienesDeRegister", false);
         Log.i("test", vienesDeRegister? "true":"false");
         if (!vienesDeRegister) {
-            // Check if user is signed in (non-null) and update UI accordingly.
-            //FirebaseUser currentUser = mAuth.getCurrentUser();
-            //updateUI(currentUser);
 
-            /*GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getActivity());
-            if (account != null) {
-                openMainActivity();
-                //Esto da error
-            }*/
             mAuth.addAuthStateListener(authStateListener);
             FirebaseUser currentUser = mAuth.getCurrentUser();
             //Este user deberia ser null
@@ -231,7 +198,6 @@ public class LoginFragment extends Fragment {
     public void onResume() {
         super.onResume();
         mAuth.addAuthStateListener(authStateListener);
-        //
     }
 
     @Override
@@ -252,7 +218,6 @@ public class LoginFragment extends Fragment {
         Intent intent = new Intent(getActivity(), MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
-        //Toast.makeText(this, "Bieeeen", Toast.LENGTH_LONG).show();
     }
 
 
@@ -263,15 +228,12 @@ public class LoginFragment extends Fragment {
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
-                // Google Sign In was successful, authenticate with Firebase
+
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-                //Log.d(TAG, "firebaseAuthWithGoogle:" + account.getId());
                 handleSignInResult(task);
-                //firebaseAuthWithGoogle(account.getIdToken());
+
             } catch (ApiException e) {
-                // Google Sign In failed, update UI appropriately
-                //Log.w(TAG, "Google sign in failed", e);
-                // ...
+
             }
         }
 
@@ -284,13 +246,11 @@ public class LoginFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            //Log.d(TAG, "signInWithCredential:success");
+
                             FirebaseUser user = mAuth.getCurrentUser();
                             openMainActivity();
                         }
 
-                        // ...
                     }
                 });
     }
@@ -299,13 +259,11 @@ public class LoginFragment extends Fragment {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
 
-            // Signed in successfully, show authenticated UI.
             openMainActivity();
         } catch (ApiException e) {
-            // The ApiException status code indicates the detailed failure reason.
-            // Please refer to the GoogleSignInStatusCodes class reference for more information.
+
             Log.w("FAIL", "signInResult:failed code=" + e.getStatusCode());
-            //updateUI(null);
+
         }
     }
 }

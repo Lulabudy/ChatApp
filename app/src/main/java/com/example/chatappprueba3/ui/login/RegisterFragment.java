@@ -115,10 +115,10 @@ public class RegisterFragment extends Fragment {
                         }, 5000);
                         goToLogin(userEmail);
                     } else {
-                        Toast.makeText(getActivity(), "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), getActivity().getApplicationContext().getResources().getString(R.string.register_pass_match), Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(getActivity(), "Todos los campos son obligatorios", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getActivity().getApplicationContext().getResources().getString(R.string.register_fields_required), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -159,7 +159,7 @@ public class RegisterFragment extends Fragment {
                     user.setShowReadMessage(true);
                     insertUser(user);
                 } else {
-                    Toast.makeText(getActivity(), "Ocurrio un fallo inesperado", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getActivity().getApplicationContext().getResources().getString(R.string.register_unexpected_error), Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -167,7 +167,7 @@ public class RegisterFragment extends Fragment {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getActivity(), "Ocurrio un fallo inesperado", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), getActivity().getApplicationContext().getResources().getString(R.string.register_unexpected_error), Toast.LENGTH_SHORT).show();
                     }
                 });
 

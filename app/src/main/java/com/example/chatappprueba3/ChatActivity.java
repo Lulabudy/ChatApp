@@ -300,24 +300,24 @@ public class ChatActivity extends AppCompatActivity {
 
                         //TODO creo que puedo hacerlo con enumeraciones
                         if (status.equals("Conectado")){
-                            textViewUserOnline.setText("En línea");
+                            textViewUserOnline.setText(getApplicationContext().getResources().getString(R.string.chats_text_online));
                         } else {
                             if (fecha.equals(dateFormat.format(c.getTime()))){
-                                textViewUserOnline.setText("Ult. vez hoy a las "+hora);
+                                textViewUserOnline.setText(getApplicationContext().getResources().getString(R.string.chats_last_today)+hora);
                             } else {
-                                textViewUserOnline.setText("Ult. vez "+fecha+" a las "+hora);
+                                textViewUserOnline.setText(getApplicationContext().getResources().getString(R.string.chats_last_seen)+fecha+getApplicationContext().getResources().getString(R.string.chats_at)+hora);
                             }
                         }
                     } else {
                         friendOnline = false;
                         if (status.equals("Desconectado")){
                             if (fecha.equals(dateFormat.format(c.getTime()))){
-                                textViewUserOnline.setText("Ult. vez hoy a las "+hora);
+                                textViewUserOnline.setText(getApplicationContext().getResources().getString(R.string.chats_last_today)+hora);
                             } else {
-                                textViewUserOnline.setText("Ult. vez "+fecha+" a las "+hora);
+                                textViewUserOnline.setText(getApplicationContext().getResources().getString(R.string.chats_last_seen)+fecha+getApplicationContext().getResources().getString(R.string.chats_at)+hora);
                             }
                         } else {
-                            textViewUserOnline.setText("En línea");
+                            textViewUserOnline.setText(getApplicationContext().getResources().getString(R.string.chats_text_online));
                         }
                     }
                 }
@@ -505,7 +505,6 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                //final String idUserSharedPreferences = sharedPreferences.getString("userSharedPreferences", "");
                 String idUser = getIntent().getExtras().getString("IdUser");
                 Status userStatus = new Status(status, idUser);
                 databaseReferenceStatus.setValue(userStatus);
@@ -605,7 +604,6 @@ public class ChatActivity extends AppCompatActivity {
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
                             //Ahora creo un mensaje en el chat con el enlace al archivo
-                            //String fileName = getFileName(uri);
                             Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
                             while (!uriTask.isSuccessful());
                             String downloadUri = uriTask.getResult().toString();

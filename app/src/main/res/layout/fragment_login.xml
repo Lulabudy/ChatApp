@@ -26,7 +26,7 @@
             android:layout_marginTop="30dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="User name: "
+            android:text="@string/login_user"
             android:layout_marginHorizontal="30dp"></TextView>
 
         <EditText
@@ -40,7 +40,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Password: "
+            android:text="@string/login_password"
             android:layout_marginHorizontal="30dp"></TextView>
 
         <EditText
@@ -58,7 +58,7 @@
             android:layout_gravity="center"
             android:layout_marginHorizontal="30dp"
             android:layout_marginBottom="30dp"
-            android:text="Login"></Button>
+            android:text="@string/login_login"></Button>
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -80,7 +80,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="2dp"
-            android:text="No account yet? Create an account"></TextView>
+            android:text="@string/login_no_account"></TextView>
 
 
 

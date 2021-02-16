@@ -164,11 +164,7 @@ public class AdapterMessages extends RecyclerView.Adapter<AdapterMessages.viewHo
              */
             settingsPreferences = PreferenceManager.getDefaultSharedPreferences(context);
             readMessages = settingsPreferences.getBoolean("read", true);
-            /*if(!readMessages){
-                holder.imageViewReadMessage.setVisibility(View.INVISIBLE);
-            } else if(readMessages){
-                holder.imageViewReadMessage.setVisibility(View.VISIBLE);
-            }*/
+
 
             if(readMessages && chat.getMessageRead()){
                 holder.imageViewSendedMessage.setVisibility(View.GONE);
@@ -224,17 +220,6 @@ public class AdapterMessages extends RecyclerView.Adapter<AdapterMessages.viewHo
             @Override
             public void onSuccess(Uri uri) {
 
-                //TODO
-                /*if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-                    if (context.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-                        downloadFile(url, idOther);
-                    } else {
-                        ActivityCompat.requestPermissions((Activity)context, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE);
-                    }
-
-                } else {
-                    downloadFile(url, idOther);
-                }*/
                 DownloadManager downloadManager = (DownloadManager) context
                         .getSystemService(Context.DOWNLOAD_SERVICE);
 
