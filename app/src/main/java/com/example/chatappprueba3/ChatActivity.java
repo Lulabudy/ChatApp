@@ -578,14 +578,21 @@ public class ChatActivity extends AppCompatActivity {
             uploadPictureFromGallery();
         }
         if (requestCode == CAMERA_REQUEST){
-            Bundle extras = data.getExtras();
-            Bitmap imageBitmap = (Bitmap) extras.get("data");
-            uploadPictureFromCamera(imageBitmap);
+            if (data != null){
+                Bundle extras = data.getExtras();
+                if (extras != null){
+                    Bitmap imageBitmap = (Bitmap) extras.get("data");
+                    uploadPictureFromCamera(imageBitmap);
+                }
+            }
         }
         if (requestCode == FILE_REQUEST){
             //Haz algo con el archivo
-            uri = data.getData();
-            uploadFile();
+            if(data != null){
+                uri = data.getData();
+                uploadFile();
+            }
+
         }
     }
 

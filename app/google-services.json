@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "254391704041",
+    "firebase_url": "https://michatapp3-default-rtdb.firebaseio.com",
     "project_id": "michatapp3",
     "storage_bucket": "michatapp3.appspot.com"
   },
@@ -14,7 +15,7 @@
       },
       "oauth_client": [
         {
-          "client_id": "254391704041-pvnv0s9kk1e1odk0td58jg9ks01nm5hp.apps.googleusercontent.com",
+          "client_id": "254391704041-1ohjo7vkrtt6plofu32qb3rb1fnimgak.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.chatappprueba3",
