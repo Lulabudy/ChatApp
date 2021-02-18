@@ -20,35 +20,35 @@
             android:textColor="@color/black"
             android:textSize="30dp"
             android:layout_marginTop="30dp"
-            android:layout_marginBottom="15dp"></TextView>
+            android:layout_marginBottom="5dp"></TextView>
 
         <TextView
-            android:layout_marginTop="30dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/login_user"
-            android:layout_marginHorizontal="30dp"></TextView>
+            android:layout_marginHorizontal="45dp"
+            android:layout_marginTop="15dp"
+            android:text="@string/login_user"></TextView>
 
         <EditText
             android:id="@+id/editTextTextEmailAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="30dp"
-            android:layout_marginBottom="15dp"
+            android:layout_marginHorizontal="45dp"
+            android:layout_marginBottom="10dp"
             android:inputType="textEmailAddress" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/login_password"
-            android:layout_marginHorizontal="30dp"></TextView>
+            android:layout_marginHorizontal="45dp"></TextView>
 
         <EditText
             android:id="@+id/editTextTextPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="30dp"
-            android:layout_marginBottom="15dp"
+            android:layout_marginHorizontal="45dp"
+            android:layout_marginBottom="10dp"
             android:inputType="textPassword" />
 
         <Button
@@ -56,22 +56,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginHorizontal="30dp"
-            android:layout_marginBottom="30dp"
+            android:layout_marginHorizontal="100dp"
+            android:layout_marginBottom="15dp"
             android:text="@string/login_login"></Button>
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@android:color/black"
-            android:layout_marginHorizontal="30dp"
-            android:layout_marginBottom="30dp"/>
+            android:layout_marginHorizontal="45dp"
+            android:layout_marginBottom="10dp"/>
 
         <com.google.android.gms.common.SignInButton
             android:id="@+id/sign_in_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="30dp"/>
+            android:layout_marginBottom="5dp"/>
 
 
         <TextView
@@ -80,6 +80,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="2dp"
+            android:layout_marginBottom="15dp"
             android:text="@string/login_no_account"></TextView>
 
 

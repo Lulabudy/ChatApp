@@ -572,7 +572,6 @@ public class ChatActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        //TODO entender esto
         if(requestCode == 1 && resultCode == RESULT_OK && data != null && data.getData() != null){
             uri = data.getData();
             uploadPictureFromGallery();

@@ -18,8 +18,8 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:layout_marginBottom="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="10dp"
             android:text="ChatApp"
             android:textAlignment="center"
             android:textColor="@color/black"
@@ -54,35 +54,35 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="30dp"
+            android:layout_marginHorizontal="100dp"
             android:text="@string/register_name"></TextView>
 
         <EditText
             android:id="@+id/editTextTextName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="30dp"
-            android:layout_marginBottom="15dp"
+            android:layout_marginHorizontal="100dp"
+            android:layout_marginBottom="5dp"
             android:inputType="textPersonName" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="30dp"
+            android:layout_marginHorizontal="100dp"
             android:text="@string/register_surname"></TextView>
 
         <EditText
             android:id="@+id/editTextTextSurname"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="30dp"
-            android:layout_marginBottom="15dp"
+            android:layout_marginHorizontal="100dp"
+            android:layout_marginBottom="5dp"
             android:inputType="textPersonName" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="30dp"
+            android:layout_marginHorizontal="100dp"
             android:layout_marginTop="5dp"
             android:text="@string/register_email"></TextView>
 
@@ -90,35 +90,35 @@
             android:id="@+id/editTextTextEmailAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="30dp"
-            android:layout_marginBottom="15dp"
+            android:layout_marginHorizontal="100dp"
+            android:layout_marginBottom="10dp"
             android:inputType="textEmailAddress" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="30dp"
+            android:layout_marginHorizontal="100dp"
             android:text="@string/register_password"></TextView>
 
         <EditText
             android:id="@+id/editTextTextPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="30dp"
-            android:layout_marginBottom="15dp"
+            android:layout_marginHorizontal="100dp"
+            android:layout_marginBottom="10dp"
             android:inputType="textPassword" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="30dp"
+            android:layout_marginHorizontal="100dp"
             android:text="@string/register_confirm_password"></TextView>
 
         <EditText
             android:id="@+id/editTextTextConfirmPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="30dp"
+            android:layout_marginHorizontal="100dp"
             android:layout_marginBottom="15dp"
             android:inputType="textPassword" />
 
@@ -127,8 +127,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginHorizontal="30dp"
-            android:layout_marginBottom="30dp"
+            android:layout_marginHorizontal="200dp"
+            android:layout_marginBottom="15dp"
             android:text="@string/register_register"></Button>
 
     </LinearLayout>
