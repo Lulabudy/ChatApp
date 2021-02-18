@@ -128,12 +128,7 @@ public class ChatActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
         circleImageViewAvatar = findViewById(R.id.imageViewChatAvatar);
         textViewUser = findViewById(R.id.textViewChatUserName);
@@ -148,8 +143,8 @@ public class ChatActivity extends AppCompatActivity {
         final String idUser = getIntent().getExtras().getString("IdUser");
         idChatGlobal = getIntent().getExtras().getString("IdChatUnico");
 
-        //Preferencias del otro usuario
-        /***
+
+        /**
          * Si el usuario no quiere mostrar su estado, oculto el textView
          */
         referenceOtherPrivacy = FirebaseDatabase.getInstance().getReference("Users").child(idUser).child("showOnlinePrivacy");
@@ -210,12 +205,9 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
-        imageButtonSendFile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Toast.makeText(getApplicationContext(), "Esta funcionalidad aun no esta disponible", Toast.LENGTH_SHORT).show();
-                chooseFile();
-            }
+        imageButtonSendFile.setOnClickListener(v -> {
+            //Toast.makeText(getApplicationContext(), "Esta funcionalidad aun no esta disponible", Toast.LENGTH_SHORT).show();
+            chooseFile();
         });
 
         //Hilo para la invisibilidad de los botones
@@ -245,12 +237,9 @@ public class ChatActivity extends AppCompatActivity {
         });
 
         //Almacenamos la foto en Firebase
-        imageButtonSendPhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Abro un alertdialog permitiendo elegir entre camara y galeria
-                openAlertDialogImages();
-            }
+        imageButtonSendPhoto.setOnClickListener(v -> {
+            //Abro un alertdialog permitiendo elegir entre camara y galeria
+            openAlertDialogImages();
         });
 
         textViewUser.setText(name);
@@ -422,7 +411,6 @@ public class ChatActivity extends AppCompatActivity {
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             if(snapshot.exists()){
                                 Boolean showReadMessage = snapshot.getValue(Boolean.class);
-                                //Toast.makeText(getApplicationContext(), "showMessage: "+showReadMessage, Toast.LENGTH_SHORT).show();
                                 if(showReadMessage){
                                     if(chat.getUserReceiveId().equals(firebaseUser.getUid())){
                                         Log.i("test", "se cumple la condicion");
@@ -635,9 +623,6 @@ public class ChatActivity extends AppCompatActivity {
         } else {
             Toast.makeText(getApplicationContext(), R.string.chats_upload_file_too_long, Toast.LENGTH_LONG).show();
         }
-
-
-
     }
 
     private void uploadPictureFromCamera(Bitmap imageBitmap) {
@@ -656,10 +641,8 @@ public class ChatActivity extends AppCompatActivity {
                         String downloadUri = uriTask.getResult().toString();
 
                         if (uriTask.isSuccessful()){
-
                             //Añado a la base de datos del chat el uri de la imagen
                             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
-
                             String idPush = databaseReferenceChats.push().getKey();
                             String idUser = getIntent().getExtras().getString("IdUser");
                             Chat chat;
@@ -668,7 +651,6 @@ public class ChatActivity extends AppCompatActivity {
                             } else {
                                 chat = new Chat(idPush, firebaseUser.getUid(), idUser, downloadUri, false, MyCalendar.getDate(), MyCalendar.getTime(), MessageType.MESSAGE_IMAGE);
                             }
-
                             databaseReferenceChats.child(idChatGlobal).child(idPush).setValue(chat);
                         }
                     }
@@ -676,7 +658,6 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void uploadPictureFromGallery() {
-
         String timeStamp = ""+System.currentTimeMillis();
         String filePath= "images/" +firebaseUser.getUid()+"-"+timeStamp;
 
@@ -723,7 +704,6 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
-    //TODO esto deberia estar en una clase estatica
     public String getFileName(Uri uri) {
         String result = null;
         if (uri.getScheme().equals("content")) {
@@ -758,8 +738,6 @@ public class ChatActivity extends AppCompatActivity {
                 cursor.close();
             }
         }
-
         return result;
     }
-
 }
