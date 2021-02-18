@@ -102,8 +102,13 @@ public class RegisterFragment extends Fragment {
                 if (!userName.equals("") && !userSurname.equals("") && !userEmail.equals("") &&
                         !userPassword.equals("") && !userConfirmPassword.equals("")){
 
-                    if (userPassword.equals(userConfirmPassword)){
 
+                    if (userPassword.length() < 6 || userConfirmPassword.length() < 6){
+                        editTextContrasena.setError(getActivity().getApplicationContext().getResources().getString(R.string.register_password_length));
+                        editTextContrasena.requestFocus();
+                        return;
+
+                    } else if(userPassword.equals(userConfirmPassword)){
                         registerUser(userName, userSurname, userEmail, userPassword);
                         loadingDialog.start();
                         Handler handler = new Handler();
@@ -115,7 +120,10 @@ public class RegisterFragment extends Fragment {
                         }, 5000);
                         goToLogin(userEmail);
                     } else {
-                        Toast.makeText(getActivity(), getActivity().getApplicationContext().getResources().getString(R.string.register_pass_match), Toast.LENGTH_SHORT).show();
+                        editTextContrasena.setError(getActivity().getApplicationContext().getResources().getString(R.string.register_pass_match));
+                        editTextContrasena.requestFocus();
+                        return;
+                        //Toast.makeText(getActivity(), getActivity().getApplicationContext().getResources().getString(R.string.register_pass_match), Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     Toast.makeText(getActivity(), getActivity().getApplicationContext().getResources().getString(R.string.register_fields_required), Toast.LENGTH_SHORT).show();

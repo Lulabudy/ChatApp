@@ -59,4 +59,5 @@
     <string name="chats_last_today">"Last seen today at "</string>
     <string name="chats_last_seen">"Last seen "</string>
     <string name="chats_at">" at "</string>
+    <string name="register_password_length">Password length minimun is 6</string>
 </resources>

@@ -59,4 +59,5 @@
     <string name="chats_last_today">"Ult. vez hoy a las "</string>
     <string name="chats_last_seen">"Ult. vez "</string>
     <string name="chats_at">" a las "</string>
+    <string name="register_password_length">La contraseña debe tener una longitud mínima de 6</string>
 </resources>
