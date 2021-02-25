@@ -47,17 +47,7 @@ public class MyLoginActivity extends AppCompatActivity {
         fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         fragmentTransaction.commit();
 
-
     }
-
-    /*@Override
-    protected void onStart() {
-        super.onStart();
-        *//*GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-        if (account != null){
-            openMainActivity();
-        }*//*
-    }*/
 
     //De esta forma cuando la aplicacion se abre directamente nos hace el log in
     @Override
@@ -72,37 +62,4 @@ public class MyLoginActivity extends AppCompatActivity {
         //mFirebaseAuth.removeAuthStateListener(authStateListener);
     }
 
-    /*private void openMainActivity() {
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-        //Toast.makeText(this, "Bieeeen", Toast.LENGTH_LONG).show();
-    }*/
-
-    /*@Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
-        if (requestCode == RC_SIGN_IN) {
-            // The Task returned from this call is always completed, no need to attach
-            // a listener.
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            handleSignInResult(task);
-        }
-    }*/
-
-    /*private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
-        try {
-            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-
-            // Signed in successfully, show authenticated UI.
-            openMainActivity();
-        } catch (ApiException e) {
-            // The ApiException status code indicates the detailed failure reason.
-            // Please refer to the GoogleSignInStatusCodes class reference for more information.
-            Log.w("FAIL", "signInResult:failed code=" + e.getStatusCode());
-            //updateUI(null);
-        }
-    }*/
 }

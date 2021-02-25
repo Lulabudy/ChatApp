@@ -167,9 +167,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.viewHolderAd
                             } else {
                                 counter.setValue(val++);
                             }
-
                         } else {
-                            //Para que sirve esto
                             counter.setValue(1);
                         }
                     }
@@ -183,7 +181,6 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.viewHolderAd
             }
         });
 
-        //TODO NO ESTAS CONTROLANDO EL CONTADOR DE SOLICITUDES - ARREGLAR
         //Este boton cambia el estado de la solicitud a "amigos"
         holder.buttonAcceptRequest.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -223,19 +220,14 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.viewHolderAd
                     }
                 });
 
-                //Reducir el contador
 
             }
         });
 
         //Este boton abre el chat
-        //TODO realmente este listener deberia tenerlo el cardView, no este boton
         holder.buttonFriends.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                //sharedPreferences = v.getContext().getSharedPreferences("UserSharedPreferences", Context.MODE_PRIVATE);
-                //final SharedPreferences.Editor editor = sharedPreferences.edit();
 
                 final DatabaseReference databaseReference = firebaseDatabase.getReference("Solicitudes")
                         .child(firebaseUser.getUid()).child(user.getId()).child("idChat");
@@ -251,9 +243,6 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.viewHolderAd
                             intent.putExtra("Avatar", user.getAvatar());
                             intent.putExtra("IdUser", user.getId());
                             intent.putExtra("IdChatUnico", idChatUnico);
-                            //editor.putString("userSharedPreferences", user.getId());
-                            //editor.apply();
-
                             v.getContext().startActivity(intent);
                         }
                     }

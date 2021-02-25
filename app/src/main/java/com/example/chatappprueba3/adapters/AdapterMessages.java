@@ -48,6 +48,9 @@ import java.util.List;
 import static android.os.Environment.DIRECTORY_DOWNLOADS;
 import static com.firebase.ui.auth.AuthUI.getApplicationContext;
 
+/***
+ * Clase Adapter para el Recycler View de los mensajes de los chats
+ */
 public class AdapterMessages extends RecyclerView.Adapter<AdapterMessages.viewHolderAdapter>{
 
     private List<Chat> chatList;
@@ -111,7 +114,6 @@ public class AdapterMessages extends RecyclerView.Adapter<AdapterMessages.viewHo
 
             Glide.with(getApplicationContext()).load(chat.getMessage()).into(holder.imageViewImage);
 
-            //TODO revisa esto
             holder.imageViewImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -121,7 +123,6 @@ public class AdapterMessages extends RecyclerView.Adapter<AdapterMessages.viewHo
                     if (holder.textViewName != null){
                         bundle.putString("Name", holder.textViewName.getText().toString());
                     } else {
-                        //TODO traducir
                         bundle.putString("Name", "Tú");
                     }
 
@@ -133,8 +134,7 @@ public class AdapterMessages extends RecyclerView.Adapter<AdapterMessages.viewHo
 
                     bundle.putString("Image", chat.getMessage());
 
-                    //TODO revisar
-                    startFragment(bundle, holder.imageViewImage);
+                    startFragment(bundle);
                 }
             });
         }
@@ -152,7 +152,7 @@ public class AdapterMessages extends RecyclerView.Adapter<AdapterMessages.viewHo
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(getApplicationContext(), R.string.chats_downloading_file, Toast.LENGTH_SHORT).show();
-                    downloadFile(chat.getMessage(), chat.getUserSendId());
+                    downloadFile(chat.getMessage());
                 }
             });
         }
@@ -210,7 +210,11 @@ public class AdapterMessages extends RecyclerView.Adapter<AdapterMessages.viewHo
         }
     }
 
-    private void downloadFile(String url, String idOther) {
+    /***
+     * Descarga un archivo
+     * @param url Url donde esta el archivo
+     */
+    private void downloadFile(String url) {
 
         StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(url);
 
@@ -236,7 +240,11 @@ public class AdapterMessages extends RecyclerView.Adapter<AdapterMessages.viewHo
 
     }
 
-    private void startFragment(Bundle bundle, ImageView imageView) {
+    /***
+     * Inicia el fragment de la imagen en tamaño grande
+     * @param bundle Imagen que va a recibir
+     */
+    private void startFragment(Bundle bundle) {
         ChatImageFragment chatImageFragment = new ChatImageFragment();
 
         if (chatImageFragment != null){

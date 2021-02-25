@@ -98,7 +98,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.viewHolderAd
 
 
         /***
-         * TODO ESTO SE PUEDE MEJORAR
+         * En función del estado muestro un texto u otro
          */
         DatabaseReference referenceStatus = firebaseDatabase.getReference("Estado").child(user.getId());
         referenceStatus.addValueEventListener(new ValueEventListener() {
@@ -167,11 +167,12 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.viewHolderAd
             }
         });
 
+        /***
+         * Abre el chat con el usuario seleccionado
+         */
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //sharedPreferences = v.getContext().getSharedPreferences("UserSharedPreferences", Context.MODE_PRIVATE);
-                //final SharedPreferences.Editor editor = sharedPreferences.edit();
 
                 final DatabaseReference databaseReference = firebaseDatabase.getReference("Solicitudes")
                         .child(firebaseUser.getUid()).child(user.getId()).child("idChat");
@@ -187,13 +188,10 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.viewHolderAd
                             intent.putExtra("Avatar", user.getAvatar());
                             intent.putExtra("IdUser", user.getId());
                             intent.putExtra("IdChatUnico", idChatUnico);
-                            //editor.putString("userSharedPreferences", user.getId());
-                            //editor.apply();
 
                             v.getContext().startActivity(intent);
                         }
                     }
-
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
 

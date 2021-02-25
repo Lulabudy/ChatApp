@@ -204,8 +204,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                         });
                 //Estos metodos aqui volvian a la aplicacion loca
-                //finish();
-                //openLogin();
+
                 break;
             case R.id.action_settings:
                 FirebaseCrashlytics.getInstance().setCustomKey("Prueba", "prueba");

@@ -38,8 +38,6 @@ public class SplashScreen extends AppCompatActivity {
         }, 2000);
     }
 
-
-
     //Abrimos el activity con el recyclerView
     private void openLoginActivity() {
         Intent intent = new Intent(this, MyLoginActivity.class);
