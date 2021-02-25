@@ -1,2 +1,6 @@
-# ChatApp
-Aplicación de chat hecha con Java y Firebase
+# Android Chat App
+Chat app made for Android.
+
+## Technologies
+* Java
+* Firebase
